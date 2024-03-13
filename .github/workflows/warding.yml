@@ -1,0 +1,30 @@
+name: warding
+on:
+  repository_dispatch:
+    types: [ warding ]
+  
+jobs:
+  warding:
+    name: warding
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set git identity
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+    - name: Create Issue
+      uses: imjohnbo/issue-bot@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        title: ${{ github.event.client_payload.title }}
+        body: ${{ github.event.client_payload.url }}
+        labels: ${{ github.event.client_payload.tags }}
+
