@@ -1,0 +1,16 @@
+title: Ward Bookmarks
+description: My saved bookmarks
+theme: minima
+
+exclude:
+  - README.md
+  - .github
+  - .gitignore
+
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: bookmark
+      permalink: /:dir/

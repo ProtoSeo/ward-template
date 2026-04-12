@@ -1,0 +1,17 @@
+---
+layout: default
+---
+
+<p><a href="{{ '/' | relative_url }}">&larr; All bookmarks</a></p>
+
+<h1>{{ page.title }}</h1>
+
+{% if page.source_url %}
+<p><strong>Source:</strong> <a href="{{ page.source_url }}" target="_blank" rel="noopener">{{ page.source_url }}</a></p>
+{% endif %}
+
+{% if page.tag %}
+<p><strong>Tags:</strong> {{ page.tag }}</p>
+{% endif %}
+
+{{ content }}
