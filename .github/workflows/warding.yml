@@ -58,11 +58,17 @@ jobs:
               }
             }')
 
-          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$GEMINI_API_KEY" \
+          RESPONSE=$(curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=$GEMINI_API_KEY" \
             -H "Content-Type: application/json" \
             -d "$REQUEST_BODY")
 
-          echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text' > ai_result.json
+          TEXT=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // empty')
+          if [ -z "$TEXT" ]; then
+            echo "::error::Gemini API response invalid or empty"
+            echo "Response: $RESPONSE"
+            exit 1
+          fi
+          echo "$TEXT" > ai_result.json
 
       - name: Update README with AI content
         run: |
