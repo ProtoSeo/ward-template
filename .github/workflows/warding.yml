@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Extract content from PR body
         id: extract
