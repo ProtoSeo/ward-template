@@ -32,9 +32,13 @@ jobs:
             const contentMatch = body.match(/## Page Content\n\n([\s\S]*)/);
             const content = contentMatch ? contentMatch[1].trim() : '';
 
+            const highlightsMatch = body.match(/## Highlights\n\n([\s\S]*?)(?=\n## |$)/);
+            const highlights = highlightsMatch ? highlightsMatch[1].trim() : '';
+
             const fs = require('fs');
             fs.writeFileSync('page_content.txt', content.substring(0, 4000));
             fs.writeFileSync('page_url.txt', url);
+            fs.writeFileSync('highlights.txt', highlights);
 
       - name: Generate title, tags and summary with Gemini
         env:
@@ -107,6 +111,17 @@ jobs:
 
           # heredoc 들여쓰기 제거
           sed -i 's/^          //' "$CHANGED_FILE"
+
+          # 수집한 구절이 있으면 AI Summary 아래에 섹션 추가
+          HIGHLIGHTS=$(cat highlights.txt)
+          if [ -n "$HIGHLIGHTS" ]; then
+            {
+              echo ""
+              echo "### 감명 깊은 구절"
+              echo ""
+              echo "$HIGHLIGHTS"
+            } >> "$CHANGED_FILE"
+          fi
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
